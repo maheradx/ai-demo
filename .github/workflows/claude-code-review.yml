@@ -10,6 +10,10 @@ on:
     #   - "src/**/*.js"
     #   - "src/**/*.jsx"
 
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   claude-review:
     # Optional: Filter by PR author
@@ -19,8 +23,9 @@ jobs:
     #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
 
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
       issues: write
       id-token: write
@@ -30,20 +35,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Run Claude Code Review
         id: claude-review
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          use_sticky_comment: true
           prompt: |
-            Review pull request #${{ github.event.pull_request.number }} in ${{ github.repository }}.
-
-            Always post a single top-level summary comment on the PR, even if the change is small or has no issues. The comment must include:
-            - A one-line overall assessment
-            - Notable findings: bugs, smells, suggestions for improvement (or "No issues found." if none)
+            Review this pull request. Provide a concise summary with:
+            - One-line overall assessment
+            - Notable findings: bugs, security issues, smells, or suggestions (or "No issues found." if none)
             - A clear recommendation: ready to merge, request changes, or needs discussion
-
-            Keep it concise. Use the `gh` CLI to post the comment.
-
