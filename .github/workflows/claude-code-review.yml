@@ -44,7 +44,22 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           use_sticky_comment: true
           prompt: |
-            Review this pull request. Provide a concise summary with:
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            Review this pull request. Always post a top-level summary comment
+            on the PR by running:
+              gh pr comment ${{ github.event.pull_request.number }} --body "..."
+
+            The summary must include:
             - One-line overall assessment
-            - Notable findings: bugs, security issues, smells, or suggestions (or "No issues found." if none)
-            - A clear recommendation: ready to merge, request changes, or needs discussion
+            - Notable findings: bugs, security issues, smells, suggestions
+              (or "No issues found." if none)
+            - A clear recommendation: ready to merge, request changes,
+              or needs discussion
+
+            For specific line-level issues, additionally use the
+            mcp__github_inline_comment__create_inline_comment tool
+            (with confirmed: true) to leave inline review comments.
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
