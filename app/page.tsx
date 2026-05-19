@@ -60,6 +60,9 @@ export default function Home() {
           </a>
         </div>
       </main>
+      <footer className="w-full max-w-3xl px-16 py-6 text-sm text-zinc-500 dark:text-zinc-500">
+        © 2026 AI-Driven Development Demo
+      </footer>
     </div>
   );
 }
