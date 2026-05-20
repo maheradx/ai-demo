@@ -16,6 +16,9 @@ export default function Home() {
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
             AI-Driven Development Demo
           </h1>
+          <p className="max-w-xs text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            Built with Claude Code
+          </p>
           <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
             Looking for a starting point or more instructions? Head over to{" "}
             <a
